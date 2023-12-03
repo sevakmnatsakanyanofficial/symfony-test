@@ -1,0 +1,37 @@
+version: '3.2'
+
+services:
+
+  php-fpm:
+    build: docker/php-fpm
+    container_name: symfony-api-php-fpm
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+    working_dir: /app
+
+  nginx:
+    image: nginx:latest
+    container_name: symfony-api-nginx
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/:ro
+      - ./docker/log/nginx/:/var/log/nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - php-fpm
+
+  pgsql:
+    image: postgres:14
+    container_name: symfony-api-pgsql
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=symfonyapi
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
