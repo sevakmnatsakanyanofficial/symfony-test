@@ -19,6 +19,7 @@ class CouponFixtures extends Fixture
             $product = new Coupon();
             $product->setType($name);
             $product->setCode($price);
+            $product->setValue(rand(10, 50));
             $manager->persist($product);
         }
 
