@@ -9,17 +9,23 @@ use Doctrine\Persistence\ObjectManager;
 class CouponFixtures extends Fixture
 {
     private array $coupons = [
-        Coupon::TYPE_PERCENT => 10,
-        Coupon::TYPE_AMOUNT => 200,
+        Coupon::TYPE_PERCENT => [
+            'code' => 'G123',
+            'value' => 10,
+        ],
+        Coupon::TYPE_AMOUNT => [
+            'code' => 'CF443',
+            'value' => 20,
+        ],
     ];
 
     public function load(ObjectManager $manager): void
     {
-        foreach ($this->coupons as $name => $price) {
+        foreach ($this->coupons as $type => $data) {
             $product = new Coupon();
-            $product->setType($name);
-            $product->setCode($price);
-            $product->setValue(rand(10, 50));
+            $product->setType($type);
+            $product->setCode($data['code']);
+            $product->setValue($data['value']);
             $manager->persist($product);
         }
 
