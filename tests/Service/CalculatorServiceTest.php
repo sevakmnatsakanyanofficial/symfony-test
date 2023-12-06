@@ -26,7 +26,7 @@ class CalculatorServiceTest extends AbstractTestCase
 
         $couponRepository = $this->createMock(CouponRepository::class);
         $couponRepository->expects($this->once())
-            ->method('findOneBy')
+            ->method('findByCode')
             ->willReturn($coupon);
 
         $form = new PriceCalculatorForm();

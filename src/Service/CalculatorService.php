@@ -27,7 +27,7 @@ class CalculatorService
 
         $coupon = null;
         if ($form->getCouponCode() !== null
-            && !($coupon = $this->couponRepository->findOneBy(['code' => strtoupper($form->getCouponCode())]))) {
+            && !($coupon = $this->couponRepository->findByCode($form->getCouponCode()))) {
             throw new \Exception('Not Fount Coupon Code: '.$form->getCouponCode());
         }
 
