@@ -4,9 +4,10 @@ namespace App\Form;
 
 use App\Validator\CorrectTaxNumber;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class PriceCalculatorForm implements CalculableFormInterface
+class PurchaseForm implements CalculableFormInterface
 {
     #[NotBlank]
     private int $productId;
@@ -16,6 +17,13 @@ class PriceCalculatorForm implements CalculableFormInterface
     private string $taxNumber;
 
     private ?string $couponCode;
+
+    #[NotBlank]
+    #[Choice(
+        choices: ['paypal', 'stripe'],
+        message: 'The value you selected is not a valid payment processor.'
+    )]
+    private string $paymentProcessor;
 
 
     public function getProductId(): int
@@ -48,10 +56,21 @@ class PriceCalculatorForm implements CalculableFormInterface
         $this->couponCode = $couponCode;
     }
 
+    public function getPaymentProcessor(): string
+    {
+        return $this->paymentProcessor;
+    }
+
+    public function setPaymentProcessor(string $paymentProcessor): void
+    {
+        $this->paymentProcessor = $paymentProcessor;
+    }
+
     public function load(Request $request): void
     {
         $this->setProductId($request->get('productId'));
         $this->setTaxNumber($request->get('taxNumber'));
         $this->setCouponCode($request->get('couponCode'));
+        $this->setPaymentProcessor($request->get('paymentProcessor'));
     }
 }

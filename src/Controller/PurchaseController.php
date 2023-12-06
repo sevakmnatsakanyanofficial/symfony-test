@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Form\PriceCalculatorForm;
-use App\Service\CalculatorService;
+use App\Form\PurchaseForm;
+use App\Service\PurchaseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,20 +11,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api', name: 'api_')]
-class CalculatorController extends AbstractController
+class PurchaseController extends AbstractController
 {
-    private CalculatorService $calculatorService;
+    private PurchaseService $purchaseService;
 
 
-    public function __construct(CalculatorService $calculatorService)
+    public function __construct(PurchaseService $purchaseService)
     {
-        $this->calculatorService = $calculatorService;
+        $this->purchaseService = $purchaseService;
     }
 
-    #[Route(path: '/calculate-price', name: 'calculate_price', methods: ['GET', 'POST'])]
-    public function price(Request $request, ValidatorInterface $validator): JsonResponse
+    #[Route(path: '/purchase', name: 'purchase', methods: ['GET', 'POST'])]
+    public function index(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $form = new PriceCalculatorForm();
+        $form = new PurchaseForm();
         $form->load($request);
         $errors = $validator->validate($form);
 
@@ -41,11 +41,8 @@ class CalculatorController extends AbstractController
         }
 
         try {
-            $price = $this->calculatorService->calculatePrice($form);
+            $this->purchaseService->buy($form);
             $responseResult['success'] = true;
-            $responseResult['data'] = [
-                'price' => $price
-            ];
 
             return $this->json($responseResult);
         } catch (\Throwable $e) {

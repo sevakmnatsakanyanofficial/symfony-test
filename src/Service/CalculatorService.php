@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Form\PriceCalculatorForm;
+use App\Form\CalculableFormInterface;
 use App\Helper\TaxHelper;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
@@ -19,7 +19,7 @@ class CalculatorService
         $this->couponRepository = $couponRepository;
     }
 
-    public function calculatePrice(PriceCalculatorForm $form): float
+    public function calculatePrice(CalculableFormInterface $form): float
     {
         if (!($product = $this->productRepository->find($form->getProductId()))) {
             throw new \Exception('Not Fount Product: '.$form->getProductId());
