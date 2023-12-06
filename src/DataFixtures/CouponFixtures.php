@@ -19,6 +19,7 @@ class CouponFixtures extends Fixture
         ],
     ];
 
+
     public function load(ObjectManager $manager): void
     {
         foreach ($this->coupons as $type => $data) {

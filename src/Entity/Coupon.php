@@ -27,6 +27,7 @@ class Coupon
     #[ORM\Column(type: Types::INTEGER)]
     private int $value;
 
+
     public function getId(): ?int
     {
         return $this->id;

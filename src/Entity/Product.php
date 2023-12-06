@@ -20,6 +20,7 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
     private ?string $price = null;
 
+
     public function getId(): ?int
     {
         return $this->id;

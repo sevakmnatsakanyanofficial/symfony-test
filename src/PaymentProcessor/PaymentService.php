@@ -6,6 +6,7 @@ class PaymentService
 {
     private PaymentStrategy $paymentStrategy;
 
+
     public function setStrategy(PaymentStrategy $paymentStrategy)
     {
         $this->paymentStrategy = $paymentStrategy;

@@ -14,6 +14,7 @@ class ProductFixtures extends Fixture
         'Чехол' => 10
     ];
 
+
     public function load(ObjectManager $manager): void
     {
         foreach ($this->products as $name => $price) {

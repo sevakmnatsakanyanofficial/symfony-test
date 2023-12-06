@@ -13,7 +13,7 @@ class PurchaseService
     {
     }
 
-    public function buy(PurchaseForm $form)
+    public function buy(PurchaseForm $form): void
     {
         try {
             $price = $this->calculatorService->calculatePrice($form);
