@@ -19,10 +19,13 @@ class Coupon
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $type = null;
+    private int $type;
 
     #[ORM\Column(length: 255)]
-    private ?string $code = null;
+    private string $code;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $value;
 
     public function getId(): ?int
     {
@@ -51,5 +54,27 @@ class Coupon
         $this->code = $code;
 
         return $this;
+    }
+
+    public function getValue(): ?int
+    {
+        return $this->value;
+    }
+
+    public function setValue(int $value): static
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function isPercentType(): bool
+    {
+        return $this->type === static::TYPE_PERCENT;
+    }
+
+    public function isAmountType(): bool
+    {
+        return $this->type === static::TYPE_AMOUNT;
     }
 }
