@@ -27,9 +27,14 @@ and you can use bash to control application.
 php composer install
 ```
 
-3. Init app in php-fpm container:
+3. Detect postgres container IP (it needs to connect from php fpm container):
 ```
-php init --env=Development --overwrite=All
+docker inspect \
+    -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' symfony-api-pgsql
+```
+and add IP in .env.local file with format:
+```
+DATABASE_URL="postgresql://root:root@!IP!:5432/symfonyapi?charset=utf8"
 ```
 
 4. RBAC table migration
@@ -40,6 +45,11 @@ php yii migrate --migrationPath=@yii/rbac/migrations
 5. Other tables migrations
 ```
 php yii migrate
+```
+
+6. Run fixtures
+```
+bin/console doctrine:fixtures:load
 ```
 
 ENJOY PROJECT!!!
