@@ -2,6 +2,7 @@
 
 namespace App\PaymentProcessor;
 
+use App\Exception\StripePaymentException;
 use Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor;
 
 class StripePaymentStrategy implements PaymentStrategy
@@ -10,7 +11,7 @@ class StripePaymentStrategy implements PaymentStrategy
     {
         $paymentProcessor = new StripePaymentProcessor();
         if (!$paymentProcessor->processPayment($price)) {
-            throw new \Exception('Stripe payment error');
+            throw new StripePaymentException();
         }
     }
 }

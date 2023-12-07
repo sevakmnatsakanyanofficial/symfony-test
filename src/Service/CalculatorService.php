@@ -8,6 +8,7 @@ use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use App\Response\ProductPriceItem;
 use App\Response\ProductPriceResponse;
+use Doctrine\ORM\EntityNotFoundException;
 
 class CalculatorService
 {
@@ -19,13 +20,13 @@ class CalculatorService
     public function calculatePrice(CalculableFormInterface $form): ProductPriceResponse
     {
         if (!($product = $this->productRepository->find($form->getProductId()))) {
-            throw new \Exception('Not Fount Product: '.$form->getProductId());
+            throw new EntityNotFoundException('Not Fount Product: '.$form->getProductId());
         }
 
         $coupon = null;
         if ($form->getCouponCode() !== null
             && !($coupon = $this->couponRepository->findByCode($form->getCouponCode()))) {
-            throw new \Exception('Not Fount Coupon Code: '.$form->getCouponCode());
+            throw new EntityNotFoundException('Not Fount Coupon Code: '.$form->getCouponCode());
         }
 
         $price = (new ProductPriceCalculator($product, $coupon, $form->getTaxNumber()))->calculate();

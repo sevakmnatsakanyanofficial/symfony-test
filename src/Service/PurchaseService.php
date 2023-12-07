@@ -3,6 +3,9 @@
 namespace App\Service;
 
 use App\Calculator\ProductPriceCalculator;
+use App\Exception\PaypalPaymentException;
+use App\Exception\PurchaseException;
+use App\Exception\StripePaymentException;
 use App\Form\PurchaseForm;
 use App\PaymentProcessor\PaymentService;
 use App\PaymentProcessor\PaypalPaymentStrategy;
@@ -11,6 +14,7 @@ use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use App\Response\ProductPurchaseItem;
 use App\Response\ProductPurchaseResponse;
+use Doctrine\ORM\EntityNotFoundException;
 
 class PurchaseService
 {
@@ -24,13 +28,13 @@ class PurchaseService
     {
         try {
             if (!($product = $this->productRepository->find($form->getProductId()))) {
-                throw new \Exception('Not Fount Product: '.$form->getProductId());
+                throw new EntityNotFoundException('Not Fount Product: '.$form->getProductId());
             }
 
             $coupon = null;
             if ($form->getCouponCode() !== null
                 && !($coupon = $this->couponRepository->findByCode($form->getCouponCode()))) {
-                throw new \Exception('Not Fount Coupon Code: '.$form->getCouponCode());
+                throw new EntityNotFoundException('Not Fount Coupon Code: '.$form->getCouponCode());
             }
 
             $price = (new ProductPriceCalculator($product, $coupon, $form->getTaxNumber()))->calculate();
@@ -45,8 +49,10 @@ class PurchaseService
             $this->paymentService->pay($price);
 
             return new ProductPurchaseResponse(new ProductPurchaseItem($price));
+        } catch (PaypalPaymentException|StripePaymentException $e) {
+            throw new PurchaseException($e->getMessage(), 400, $e);
         } catch (\Throwable $e) {
-            throw new \Exception($e->getMessage(), 0, $e);
+            throw new PurchaseException('Not Planned Purchase Error', 400, $e);
         }
     }
 }
