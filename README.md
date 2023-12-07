@@ -59,7 +59,7 @@ bin/console doctrine:migrations:migrate
 ```
 4. Run fixtures
 ```
-bin/console doctrine:fixtures:load
+php bin/console doctrine:fixtures:load
 ```
 
 Send requests to check result
@@ -79,5 +79,10 @@ curl --location 'http://symfonyapi.loc/api/purchase' \
 --header 'Content-type: application/json' \
 --data '{"productId": 4, "taxNumber": "FRVB123456789", "couponCode": "CF443", "paymentProcessor": "paypal"}'
 ```
+
+3 . To check tests run:
+```
+ php bin/phpunit
+ ```
 
 ENJOY PROJECT!!!
