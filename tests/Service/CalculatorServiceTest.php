@@ -35,7 +35,7 @@ class CalculatorServiceTest extends AbstractTestCase
         $form->setTaxNumber('DE123456789');
 
         $service = new CalculatorService($productRepository, $couponRepository);
-        $result = $service->calculatePrice($form);
+        $result = $service->calculatePrice($form)->getData()->getPrice();
 
         $this->assertEquals(72.9, $result);
     }
