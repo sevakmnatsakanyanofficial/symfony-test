@@ -50,8 +50,10 @@ class PriceCalculatorForm implements CalculableFormInterface
 
     public function load(Request $request): void
     {
-        $this->setProductId($request->get('productId'));
-        $this->setTaxNumber($request->get('taxNumber'));
-        $this->setCouponCode($request->get('couponCode'));
+        $data = $request->getPayload();
+
+        $this->setProductId($data->get('productId'));
+        $this->setTaxNumber($data->get('taxNumber'));
+        $this->setCouponCode($data->get('couponCode'));
     }
 }

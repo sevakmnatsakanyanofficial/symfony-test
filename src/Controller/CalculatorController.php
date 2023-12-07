@@ -21,7 +21,7 @@ class CalculatorController extends AbstractController
         $this->calculatorService = $calculatorService;
     }
 
-    #[Route(path: '/calculate-price', name: 'calculate_price', methods: ['GET', 'POST'])]
+    #[Route(path: '/calculate-price', name: 'calculate_price', methods: ['POST'])]
     public function price(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $form = new PriceCalculatorForm();

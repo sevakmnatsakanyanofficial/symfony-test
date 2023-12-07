@@ -21,26 +21,25 @@ class PurchaseController extends AbstractController
         $this->purchaseService = $purchaseService;
     }
 
-    #[Route(path: '/purchase', name: 'purchase', methods: ['GET', 'POST'])]
+    #[Route(path: '/purchase', name: 'purchase', methods: ['POST'])]
     public function index(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $form = new PurchaseForm();
-        $form->load($request);
-        $errors = $validator->validate($form);
-
-        $responseResult = [
-            'success' => false,
-            '_links' => [
-                'self' => $request->getUri()
-            ]
-        ];
-
-        if (count($errors) > 0) {
-            $responseResult['errors'] = $errors;
-            return $this->json($responseResult, 400);
-        }
-
         try {
+            $form = new PurchaseForm();
+            $form->load($request);
+            $errors = $validator->validate($form);
+
+            $responseResult = [
+                'success' => false,
+                '_links' => [
+                    'self' => $request->getUri()
+                ]
+            ];
+
+            if (count($errors) > 0) {
+                return $this->json(['errors' => $errors], 400);
+            }
+
             $this->purchaseService->buy($form);
             $responseResult['success'] = true;
 

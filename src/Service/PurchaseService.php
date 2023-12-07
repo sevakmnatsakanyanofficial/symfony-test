@@ -26,7 +26,7 @@ class PurchaseService
 
             $this->paymentService->pay($price);
         } catch (\Throwable $e) {
-            throw new \Exception('Purchase error', 0, $e);
+            throw new \Exception($e->getMessage(), 0, $e);
         }
     }
 }
