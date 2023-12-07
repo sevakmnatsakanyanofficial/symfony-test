@@ -86,7 +86,7 @@ class PurchaseService
 
     private function commitPurchase(Purchase $purchase)
     {
-        $this->entityManager->getConnection()->beginTransaction();
+        $this->entityManager->beginTransaction();
         try {
             $this->entityManager->persist($purchase);
             $this->entityManager->flush();
