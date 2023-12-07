@@ -38,7 +38,7 @@ instead of 127.0.0.1 may be other address (check your docker setup)
 docker inspect \
     -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' symfony-api-pgsql
 ```
-and add IP in .env.local file with format:
+create .env.local file and add IP in it with format:
 ```
 DATABASE_URL="postgresql://root:root@!IP!:5432/symfonyapi?charset=utf8"
 ```
@@ -57,7 +57,7 @@ php composer install
 ```
 3. Run migrations
 ```
-bin/console doctrine:migrations:migrate
+php bin/console doctrine:migrations:migrate
 ```
 4. Run fixtures
 ```
@@ -71,7 +71,7 @@ Send requests to check result
 curl --location 'http://symfonyapi.loc/api/calculate-price' \
 --header 'Accept: application/json' \
 --header 'Content-type: application/json' \
---data '{"productId": 4, "taxNumber": "FRVB123456789", "couponCode": "CF443"}'
+--data '{"productId": 1, "taxNumber": "FRVB123456789", "couponCode": "CF443"}'
 ```
 
 2 . Endpoint for product purchase. Request example:
@@ -79,7 +79,7 @@ curl --location 'http://symfonyapi.loc/api/calculate-price' \
 curl --location 'http://symfonyapi.loc/api/purchase' \
 --header 'Accept: application/json' \
 --header 'Content-type: application/json' \
---data '{"productId": 4, "taxNumber": "FRVB123456789", "couponCode": "CF443", "paymentProcessor": "paypal"}'
+--data '{"productId": 1, "taxNumber": "FRVB123456789", "couponCode": "CF443", "paymentProcessor": "paypal"}'
 ```
 
 3 . To check tests run:
