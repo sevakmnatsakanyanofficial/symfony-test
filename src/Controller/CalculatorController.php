@@ -24,34 +24,19 @@ class CalculatorController extends AbstractController
     #[Route(path: '/calculate-price', name: 'calculate_price', methods: ['POST'])]
     public function price(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $form = new PriceCalculatorForm();
-        $form->load($request);
-        $errors = $validator->validate($form);
-
-        $responseResult = [
-            'success' => false,
-            '_links' => [
-                'self' => $request->getUri()
-            ]
-        ];
-
-        if (count($errors) > 0) {
-            $responseResult['errors'] = $errors;
-            return $this->json($responseResult, 400);
-        }
-
         try {
-            $price = $this->calculatorService->calculatePrice($form);
-            $responseResult['success'] = true;
-            $responseResult['data'] = [
-                'price' => $price
-            ];
+            $form = new PriceCalculatorForm();
+            $form->load($request);
+            $errors = $validator->validate($form);
 
-            return $this->json($responseResult);
+            if (count($errors) > 0) {
+                return $this->json(['errors' => $errors], 400);
+            }
+
+            return $this->json($this->calculatorService->calculatePrice($form));
         } catch (\Throwable $e) {
             // TODO: add handler and logging
-            $responseResult['errors'] = [[$e->getMessage()]];
-            return $this->json($responseResult, 400);
+            return $this->json(['errors' => [[$e->getMessage()]]], 400);
         }
     }
 }

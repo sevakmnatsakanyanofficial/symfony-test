@@ -2,24 +2,21 @@
 
 namespace App\Service;
 
+use App\Calculator\ProductPriceCalculator;
 use App\Form\CalculableFormInterface;
-use App\Helper\TaxHelper;
 use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
+use App\Response\ProductPriceItem;
+use App\Response\ProductPriceResponse;
 
 class CalculatorService
 {
-    private ProductRepository $productRepository;
-    private CouponRepository $couponRepository;
-
-
-    public function __construct(ProductRepository $productRepository, CouponRepository $couponRepository)
-    {
-        $this->productRepository = $productRepository;
-        $this->couponRepository = $couponRepository;
+    public function __construct(
+        private ProductRepository $productRepository,
+        private CouponRepository $couponRepository) {
     }
 
-    public function calculatePrice(CalculableFormInterface $form): float
+    public function calculatePrice(CalculableFormInterface $form): ProductPriceResponse
     {
         if (!($product = $this->productRepository->find($form->getProductId()))) {
             throw new \Exception('Not Fount Product: '.$form->getProductId());
@@ -31,14 +28,8 @@ class CalculatorService
             throw new \Exception('Not Fount Coupon Code: '.$form->getCouponCode());
         }
 
-        $price = $product->getPrice();
-        if ($coupon) {
-            $price = ($coupon->isAmountType() ? $price - $coupon->getValue() : $price - ($price*$coupon->getValue()/100));
-        }
+        $price = (new ProductPriceCalculator($product, $coupon, $form->getTaxNumber()))->calculate();
 
-        $taxValue = TaxHelper::getPercentValueByNumber($form->getTaxNumber());
-        $price = $price - ($price*$taxValue/100);
-
-        return $price;
+        return new ProductPriceResponse(new ProductPriceItem($price));
     }
 }
